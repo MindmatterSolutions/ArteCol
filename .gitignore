@@ -1,0 +1,11 @@
+### OS
+.DS_store
+.localized
+
+### IDE
+.idea/
+.vscode/
+
+### PROJECT
+bin/
+*.dev.*
