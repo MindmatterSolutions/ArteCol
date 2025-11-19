@@ -1,3 +1,3 @@
-module github.com/MindmatterSolutions/ArteCol
+module github.com/MindmatterSolutions/go-this
 
-go 1.14
+go 1.22
