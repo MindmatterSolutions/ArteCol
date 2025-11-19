@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/MindmatterSolutions/go-this/pkg/artefact"
 )
 
 const commandName = "this"
@@ -69,6 +71,28 @@ func resolveThis(args []string) (thisCommand, error) {
 
 // dispatch calls the file-type specific logic for the resolved path.
 func dispatch(this thisCommand) error {
-	fmt.Printf("Dispatching artefact resources for %s\n", this.targetPath)
-	return nil
+	info, err := os.Stat(this.targetPath)
+	if err != nil {
+		return fmt.Errorf("stat target path %q: %w", this.targetPath, err)
+	}
+
+	if info.IsDir() {
+		entries, err := artefact.HandleDirectory(this.targetPath)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Directory %s contains %d entries\n", this.targetPath, len(entries))
+		return nil
+	}
+
+	if info.Mode().IsRegular() {
+		data, err := artefact.HandleFile(this.targetPath)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("File %s has %d bytes\n", this.targetPath, len(data))
+		return nil
+	}
+
+	return artefact.HandleUnknown(this.targetPath)
 }
