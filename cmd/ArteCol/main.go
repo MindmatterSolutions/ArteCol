@@ -18,16 +18,19 @@ Examples:
 When no path is provided the current working directory is used.
 `, commandName, commandName, commandName)
 
+// thisCommand contains the data necessary to execute the `this` command.
 type thisCommand struct {
 	targetPath string
 }
 
+// main is the entry point for the `this` command binary.
 func main() {
 	if err := run(os.Args[1:]); err != nil {
 		os.Exit(1)
 	}
 }
 
+// run parses CLI arguments and dispatches the artefact resolver.
 func run(args []string) error {
 	this, err := resolveThis(args)
 	if err != nil {
@@ -44,6 +47,7 @@ func run(args []string) error {
 	return nil
 }
 
+// resolveThis returns a populated thisCommand from the provided args slice.
 func resolveThis(args []string) (thisCommand, error) {
 	switch len(args) {
 	case 0:
@@ -63,6 +67,7 @@ func resolveThis(args []string) (thisCommand, error) {
 	}
 }
 
+// dispatch calls the file-type specific logic for the resolved path.
 func dispatch(this thisCommand) error {
 	fmt.Printf("Dispatching artefact resources for %s\n", this.targetPath)
 	return nil
